@@ -11,6 +11,7 @@ namespace SomeProjectNamespace
         protected Point ClickPoint;
         private bool? IsValueParsed = null;
         private int Value;
+        
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             if (IsValueParsed == null)
@@ -44,19 +45,22 @@ namespace SomeProjectNamespace
                 }
             }
         }
-
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (!IsFocused && IsValueParsed == true)
             {
+                string var = Text.Replace(',', '.').Split('.')[0];
+                int.TryParse(var, out Value);
+
                 IsDragging = true;
                 ClickPoint = e.GetPosition(this);
                 Mouse.Capture(this);
             }
-            base.OnMouseDown(e);
+            base.OnMouseLeftButtonDown(e);
         }
-
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        
+        protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             if (IsDragging && IsValueParsed == true)
             {
@@ -77,9 +81,9 @@ namespace SomeProjectNamespace
                 Focus();
             }
             ReleaseMouseCapture();
-            base.OnMouseUp(e);
+            base.OnPreviewMouseLeftButtonUp(e);
         }
-
+        
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
